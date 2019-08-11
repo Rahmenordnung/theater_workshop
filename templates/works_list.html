@@ -1,0 +1,11 @@
+<html>
+<head>
+<title>Theater Works Page</title>
+</head>
+<body>
+  <h1>This is the Theater Works list</h1>
+  {% for work in queryset %}
+    <p>{{ work }}</p>
+  {% endfor %}  
+</body>
+</html>
