@@ -1,12 +1,66 @@
-<html>
-<head>
-<title>Text about a Parts detail Page</title>
-</head>
-<body>
-  <h1>This is the text about a part detail </h1>
-    <p>The name of the work is:  {{ text.part.work.title }}</p> 
-    <p>This part belongs to:  {{ text.part.title }}</p>
-    <p>The text about the work is called: {{ text.title }}</p> 
-    
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item " aria-current="page">
+      <a href="{% url 'theater_operas:works_list' %}">Works list</a>
+    </li>
+    <li class="breadcrumb-item " aria-current="page">
+      <a href="{{ text.part.work.get_absolute_url }}">{{ text.part.work.title }}</a>
+    </li>
+    <li class="breadcrumb-item" aria-current="page">
+    <a href="{{ text.part.get_absolute_url }}">{{ text.part.title }}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+    {{ text.title }}
+    </li>
+{% endblock breadcrumb %}
+
+{% block content %}
+  <div class="row">
+    <main class="col-md-4">
+      <div class="card" style="width: 18rem;">
+        <div class="card-header">{{ text.part.work.title }}</div>
+        <img src="..{{ text.part.work.cover.url }}." class="text.card-img-top" alt="...">
+        <div class="card-body">
+          <p class="card-text">Published{{ part.work.publication_date }}</p>
+        </div>
+      </div>
+    </main>
+  <aside class="col-md-8">
+    <div class="card">
+        <div class="card-header">
+          Mentions details
+        </div>
+        
+        {% for mention in text.mention_set.all %}
+            <div class="accordion" id="toggle-{{ mention.mention_number }}">
+                <div class="card">
+                    <div class="card-header" id="heading-{{ mention.mention_number }}">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{ mention.mention_number }}" aria-expanded="true" aria-controls="collapse-{{ mention.mention_number }}">
+                        Solution {{ mention.mention_number }}
+                        </button>
+                    </h2>
+                    </div>
+
+                    <div id="collapse-{{ solution.solution_number }}" class="collapse" aria-labelledby="heading-{{ mention.mention_number }}" data-parent="#toggle-{{ mention.mention_number }}">
+                    <div class="card-body">
+                        <img src="{{ mention.image.url }}" class="card-img-top" alt="...">
+                    </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        
+          {% for mention in text.mention_set.all %}
+            <li class="list-group-item">
+              <a href="{{ text.get_absolute_url }}">
+                Mentions {{ mention.mention_number }}
+              </a>
+            </li>
+          {% endfor %}
+        
+      </div>  
+    </aside>
+  </div>    
+{% endblock content %}

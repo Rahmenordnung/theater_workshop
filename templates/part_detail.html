@@ -1,10 +1,45 @@
-<html>
-<head>
-<title>work Parts detail Page</title>
-</head>
-<body>
-  <h1>This is the works parts detail </h1>
-    <p>{{ part.title }}</p> 
-    <p>This part belongs to {{ part.work.title }}</p> 
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item " aria-current="page">
+      <a href="{% url 'theater_operas:works_list' %}">Works list</a>
+    </li>
+    <li class="breadcrumb-item " aria-current="page">
+      <a href="{{ part.work.get_absolute_url }}">{{ part.work.title }}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+    {{ part }}
+    </li>
+{% endblock breadcrumb %}
+
+{% block content %}
+<div class="row">
+  <main class="col-md-4">
+    <div class="card" style="width: 18rem;">
+      <div class="card-header">{{ part.work.title }}</div>
+      <img src="..{{ part.work.cover.url }}." class="card-img-top" alt="...">
+      <div class="card-body">
+        <p class="card-text">Published{{ part.work.publication_date }}</p>
+      </div>
+    </div>
+
+  </main>
+
+  <aside class="col-md-8">
+    <div class="card">
+        <div class="card-header">
+          Detail of a specific part of a work
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for text in part.text_set.all %}
+            <li class="list-group-item">
+              <a href="{{ text.get_absolute_url }}">
+                {{ text.text_number }}. {{ text.title }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>  
+    </aside>
+  </div>
+{% endblock content %}

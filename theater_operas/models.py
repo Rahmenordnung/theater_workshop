@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import redirect, reverse
 
 # Maestro 
 #     Opera
@@ -28,13 +29,19 @@ class Work(models.Model):
   def __str__(self):
     return self.title
   
+  def get_absolute_url(self):
+    return reverse("theater_operas:works_detail", kwargs={'slug': self.slug })
+  
 class Part(models.Model):
   work = models.ForeignKey(Work, on_delete=models.CASCADE)
   part_number = models.IntegerField()
   title = models.CharField(max_length=50)
   
   def __str__(self):
-    return self.title 
+    return self.title
+  
+  def get_absolute_url(self):
+    return reverse("theater_operas:part-detail", kwargs={'work_slug': self.work.slug, 'part_number': self.part_number }) 
 
 class Text(models.Model):
   part = models.ForeignKey(Part, on_delete=models.CASCADE)
@@ -44,7 +51,9 @@ class Text(models.Model):
   
   def __str__(self):
     return self.title
-
+  
+  def get_absolute_url(self):
+    return reverse("theater_operas:text_detail", kwargs={'work_slug': self.part.work.slug, 'part_number': self.part.part_number, 'text_number': self.text_number })
 class Mention(models.Model):
   text = models.ForeignKey(Text, on_delete = models.CASCADE)
   image = models.ImageField()
